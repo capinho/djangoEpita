@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} L'inscription aux cours | EPITA {% endblock title %}
+
+{% load crispy_forms_tags %}
+{% block side_bar %}
+    {% include 'partial_active_element.html' with active='course_registration' %}
+{% endblock side_bar %}
+{% block content %}
+    {% block js %}
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+       <script type="text/javascript" src="{% static 'js/tbl_scroll.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/disable_checkbox.js' %}"></script>
+    {% endblock js %}
+<div class="container-fluid mt-5">
+	<!-- Table with panel -->
+  {% if not all_courses_are_registered %}
+<form method="POST" action="{% url 'course_registration' %}">{% csrf_token %}
+  {% for message in messages %}
+  <div style="background-color: lightblue" class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+{% endfor %}
+<div class="card card-cascade narrower">
+
+  <!--Card image-->
+  <div class="view view-cascade gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+
+    <div>
+      <button id="add_selected" type="submit" class="btn btn-outline-white btn-rounded btn-sm px-2">
+        <i class="fa fa-plus" aria-hidden="true"></i> Ajouter sélectionnée
+      </button>
+    </div>
+
+    <a href="" class="white-text mx-3">{{ current_session }} L'inscription aux cours</a>
+    <span class="pull-right white-text">Niveau: {{ student.level }}</span>
+    <div>
+    </div>
+
+  </div>
+  <!--/Card image-->
+  <div class="px-4">
+
+    <div class="table-wrapper">
+      <!--Table-->
+      <table id="dtVerticalScrollExample" class="table table-hover mb-0">
+
+        <!--Table head-->
+        <thead>
+          <tr>
+            <th>
+             
+            </th>
+            <th class="th-lg">
+              <a>Code de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Titre de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Unite(s)
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Classification
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Groupe électif
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <!--Table head-->
+
+        <!--Table body-->
+        <tbody>
+          <small><u class="blue-text">PREMIER SEMESTRE</u></small>
+        	{% for course in courses %}
+          {% if course.semester == "First" %}
+        <tr>
+            <th scope="row">
+              <input name="{{ course.pk }}" value="{{ course.courseUnit }}" class="form-check-input" type="checkbox" id="checkbox1">
+              <label class="form-check-label" for="checkbox1" class="label-table"></label>
+            </th>
+            <td>{{ course.courseCode }}</td>
+            <td>{{ course.courseTitle }}</td>
+            <td>{{ course.courseUnit }}</td>
+            {% if course.is_elective %}
+            <td>Électif</td>
+            {% else %}
+            <td>Core</td>
+            {% endif %}
+            <td class="text-center">-</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+          <tr>
+            <th scope="row">
+             
+            </th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Premier semestre unite(s):</b>  {{ total_first_semester_unit }} </td>
+          </tr>
+        </tbody>
+        <!--Table body-->
+      </table>
+      <!--Table-->
+    </div>
+  </div>
+  <br>
+  <br>
+    <div class="px-4">
+
+    <div class="table-wrapper">
+      <!--Table-->
+      <table id="dtVerticalScrollExample" class="table table-hover mb-0">
+
+        <!--Table head-->
+        <thead>
+          <tr>
+            <th>
+             
+            </th>
+            <th class="th-lg">
+              <a>Code de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Titre de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Unite(s)
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Classification
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Groupe électif
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <!--Table head-->
+
+        <!--Table body-->
+        <tbody>
+          <small><u class="blue-text">SECOND SEMESTRE</u></small>
+          {% for course in courses %}
+          {% if course.semester == "Second" %}
+        <tr>
+            <th scope="row">
+              <input name="{{ course.pk }}" value="{{ course.courseUnit }}" class="form-check-input" type="checkbox" id="checkbox1">
+              <label class="form-check-label" for="checkbox1" class="label-table"></label>
+            </th>
+            <td>{{ course.courseCode }}</td>
+            <td>{{ course.courseTitle }}</td>
+            <td>{{ course.courseUnit }}</td>
+            {% if course.is_elective %}
+            <td>Elective</td>
+            {% else %}
+            <td>Core</td>
+            {% endif %}
+            <td class="text-center">-</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+          <tr>
+            <th scope="row">
+             
+            </th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Second semestre unite(s):</b>  {{ total_sec_semester_unit }} </td>
+          </tr>
+          <tr>
+            <th scope="row">
+             
+            </th>
+            <td><b>Unité(s) sélectionnée: <a id="units">{{ total_registered_unit }}</a></b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Total Unité(s):</b>  {{ total_sec_semester_unit|add:total_first_semester_unit }} </td>
+          </tr>
+        </tbody>
+        <!--Table body-->
+      </table>
+      <!--Table-->
+    </div>
+  </div>
+</div>
+</form>
+{% endif %}
+<br>
+<br>
+{% if not no_course_is_registered %}
+<form method="POST" action="{% url 'course_drop' %}">{% csrf_token %}
+<div class="card card-cascade narrower">
+
+  <!--Card image-->
+  <div class="view view-cascade gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+
+    <div>
+      <button type="submit" class="btn btn-outline-white btn-rounded btn-sm px-2">
+        <i class="fa fa-times" aria-hidden="true"></i> Supprimer la sélection
+      </button>
+    </div>
+
+    <a href="" class="white-text mx-3">Cours enregistrés</a>
+
+    <div>
+    <a target="_blank" href="{% url 'course_registration_form' %}" class="btn btn-outline-white btn-rounded btn-sm px-2">
+        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Imprimer le formulaire d'inscription
+      </a>
+    </div>
+
+  </div>
+  <!--/Card image-->
+
+  <div class="px-4">
+
+    <div class="table-wrapper">
+      <!--Table-->
+      <table class="table table-hover mb-0">
+
+        <!--Table head-->
+        <thead>
+          <tr>
+            <th>
+             
+            </th>
+            <th class="th-lg">
+              <a>Code de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Titre de cours
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Unite(s)
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Classification
+              </a>
+            </th>
+            <th class="th-lg">
+              <a href="">Groupe électif
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <!--Table head-->
+
+        <!--Table body-->
+        <tbody>
+        	{% for course in registered_courses %}
+        <tr>
+            <th scope="row">
+              <input name="{{ course.pk }}" value="{{ course.courseUnit }}" class="form-check-input" type="checkbox" id="checkbox1">
+              <label class="form-check-label" for="checkbox1" class="label-table"></label>
+            </th>
+            <td>{{ course.courseCode }}</td>
+            <td>{{ course.courseTitle }}</td>
+            <td>{{ course.courseUnit }}</td>
+            {% if not course.is_elective %}
+            <td>Core</td>
+            {% else %}
+            <td> - </td>
+            {% endif %}
+            {% if course.is_elective %}
+            <td>Elective</td>
+            {% else %}
+            <td class="text-center">-</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+          <tr>
+            <th scope="row">
+             
+            </th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Total unite(s):</b>  {{ total_registered_unit }} </td>
+          </tr>
+        </tbody>
+        <!--Table body-->
+      </table>
+      <!--Table-->
+    </div>
+  </div>
+</div>
+</form>
+{% endif %}
+<br>
+<br>
+</div>
+  <br>
+  <br>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Entrée de note | EPITA {% endblock title %}
+
+{% block side_bar %}
+    {% include 'partial_active_element.html' with active='Add_Score' %}
+{% endblock side_bar %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+ <!-- Heading -->
+    <div class="card mb-4 wow fadeIn">
+	<!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between">
+
+            <h6 class="mb-2 mb-sm-0 pt-1">
+                <a href="/">Page d'accueil</a>
+                     <span>/</span>
+                     <span>Ajouter notes</span>
+            </h6>
+        </div>
+
+    </div>
+	<!-- Heading -->
+
+	<!-- Editable table -->
+	<form method="post" action="">{% csrf_token %}
+	<div class="card">
+	<h6 class="card-header text-center font-weight-bold text-uppercase py-4">{{ current_semester }} Semestre - {{ current_session }}</h6>
+		<div class="container">
+		  <div class="row">
+		    <div class="col-md-5">
+		    	<button id="submit" data-toggle="tooltip" title="Save Score" type="submit" class="btn btn-primary w-25 p-3 float-left">Sauvegarder</button>
+		    	<span data-toggle="tooltip" title="Allow editing" id="edit_btn" onclick="toggle_score_edit()" class="btn btn-default w-26 p-3 float-left">Modifier</span>
+		    	<a class="white-text" target="_blank" href="{% url 'result_sheet_pdf_view' id=course.id %}">
+		    <span data-toggle="tooltip" title="Print Result sheet" class="btn btn-default w-26 p-3 float-left">
+		    		PDF
+		    	</span></a>
+		    </div>
+		    <div class="col-md-3"><small>{{ course.courseTitle }}</small></div>
+		    <div class="col-md-4">
+		    	<div class="dropdown">
+	    			<button class="btn btn-info dropdown-toggle float-right" type="button" id="dropdownMenu3" data-toggle="dropdown"
+		    			aria-haspopup="true" aria-expanded="false">
+		    			{{ course.courseCode }}
+		    		</button>
+
+					<div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+	    				<h6 class="dropdown-header">Sélectionnez un cours</h6>
+	    					{% for course in courses %}
+	    				<a data-toggle="tooltip" title="{{ course.courseTitle }}" class="dropdown-item" href="{% url 'add_score_for' course.id %}">
+	    					{{ course.courseCode }}
+	    				</a>
+	    					{% endfor %}
+					</div>
+
+				</div>
+			</div>
+		  </div>
+		</div>
+	
+
+
+	  <div class="card-body">
+	    <div id="table" class="table-editable">
+
+	      <table class="table table-bordered table-responsive-md table-striped text-center">
+	        <tr>
+	          <th class="text-center">Etudiant</th>
+	          <th class="text-center">CC note</th>
+	          <th class="text-center">Examen note</th>
+	          <th class="text-center">Total</th>
+	          <th class="text-center">Classe</th>
+	          <th class="text-center">Commentaire</th>
+	        </tr>
+	        {% for student in students %}
+	        <tr>
+	          <td class="pt-3-half" name="{{ student.id }}" contenteditable="false">
+	          		{{ student.student.id_number }}
+	          </td>
+	          <td class="pt-3-half" contenteditable="false">
+	          	<input id="ca" class="score" type="number" name="{{ student.id }}" value="{{ student.ca }}">
+	          </td>
+	          <td class="pt-3-half" contenteditable="false">
+	          	<input class="score" type="number" name="{{ student.id }}" value="{{ student.exam }}">
+	          </td>
+	          <td class="pt-3-half" contenteditable="false">{{ student.total }}</td>
+	          <td class="pt-3-half" contenteditable="false">{{ student.grade }}</td>
+	          <td class="pt-3-half" contenteditable="false">{{ student.comment }}</td>
+	        </tr>
+	        {% endfor %}
+	      </table>
+	    </div>
+	  </div>
+	</div>
+</form>
+	<!-- Editable table -->
+	<br>
+	<br>
+
+</div>
+<script src="{% static 'js/disable_input_score.js' %}"></script>
+{% endblock %}

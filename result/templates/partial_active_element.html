@@ -1,0 +1,104 @@
+<div class="list-group list-group-flush">
+    <a href="/" class="list-group-item 
+        {% if active == 'Dashboard' %} active {% endif %} waves-effect">
+        <i class="fa fa-pie-chart mr-3" aria-hidden="true"></i>Tableau de bord</a>
+    
+    <a href="{% url 'profile' %}" class="list-group-item 
+        {% if active == 'Profile' %} active {% endif %} waves-effect">
+        <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile</a>
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'student_list' %}" class="list-group-item 
+        {% if active == 'students' %} active {% endif %} waves-effect">
+        <i class="fa fa-users mr-3" aria-hidden="true"></i> Etudiants</a>
+        {% endif %}
+
+        {% if request.user.is_lecturer %}
+        <a href="{% url 'student_list' %}" class="list-group-item 
+        {% if active == 'students' %} active {% endif %} waves-effect">
+        <i class="fa fa-graduation-cap mr-3" aria-hidden="true"></i>Voir Etudiants</a>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'staff_list' %}" class="list-group-item 
+        {% if active == 'staff' %} active {% endif %} waves-effect">
+        <i class="fa  fa-users mr-3" aria-hidden="true"></i> Personnel</a>
+        {% endif %}
+
+    {% if request.user.is_lecturer %}
+        <a href="{% url 'staff_list' %}" class="list-group-item 
+        {% if active == 'staff' %} active {% endif %} waves-effect">
+        <i class="fa  fa-users mr-3" aria-hidden="true"></i>Afficher le personnel</a>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'course_list' %}" class="list-group-item 
+        {% if active == 'course_list' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i> Cours</a>
+
+    {% elif request.user.is_lecturer %}
+        <a href="{% url 'course_list' %}" class="list-group-item 
+        {% if active == 'course_list' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i>Voir Cours</a>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'course_allocation' %}" class="list-group-item 
+        {% if active == 'course_allocation' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i>Répartition des cours</a>
+    {% endif %}
+
+    {% if request.user.is_superuser or request.user.is_lecturer %}
+    <a href="{% url 'course_allocation_view' %}" class="list-group-item 
+        {% if active == 'course_allocation_view' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i>Liste repartition cours</a>
+    {% endif %}
+
+    {% if request.user.is_student %}
+    <a href="{% url 'course_registration' %}" class="list-group-item 
+        {% if active == 'course_registration' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i>L'inscription aux cours</a>
+    {% endif %}
+
+    {% if request.user.is_lecturer %}
+    <a href="{% url 'add_score' %}" class="list-group-item 
+        {% if active == 'Add_Score' %} active {% endif %} waves-effect">
+        <i class="fa fa-book mr-3" aria-hidden="true"></i>
+        Gérer les notes
+    </a>
+    {% endif %}
+    
+    {% if request.user.is_student %}
+    <a href="{% url 'view_results' %}" class="list-group-item 
+        {% if active == 'view_results' %} active {% endif %} waves-effect">
+        <i class="fa fa-eye mr-3" aria-hidden="true"></i>     
+             Voir Resultat</a>
+    {% endif %}
+
+    <a href="{% url 'change_password' %}" class="list-group-item 
+        {% if active == 'change_password' %} active {% endif %} waves-effect">
+    <i class="fa  fa-key mr-3" aria-hidden="true"></i>Changer Mot de passe</a>
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'manage_session' %}" class="list-group-item 
+        {% if active == 'manage_session' %} active {% endif %} waves-effect">
+        <i class="fa  fa-cogs mr-3" aria-hidden="true"></i>Paramètre de session</a>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'manage_semester' %}" class="list-group-item 
+        {% if active == 'manage_semester' %} active {% endif %} waves-effect">
+        <i class="fa  fa-gear mr-3" aria-hidden="true"></i>Paramètre du semestre</a>
+    {% endif %}
+
+    {% if request.user.is_student %}
+    <a href="#" class="list-group-item 
+        {% if active == 'payment' %} active {% endif %} waves-effect">
+        <i class="fa  fa-cc-mastercard mr-3" aria-hidden="true"></i>Paiement </a>
+    {% endif %}
+    {% if request.user.is_superuser %}
+    <a href="#" class="list-group-item 
+        {% if active == 'system_setting' %} active {% endif %} waves-effect">
+        <i class="fa  fa-gear mr-3" aria-hidden="true"></i>Réglage du système</a>
+    {% endif %}
+</div>

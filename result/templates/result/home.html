@@ -1,0 +1,271 @@
+ {% extends 'base.html' %}
+ {% load humanize %}
+{% block title %} Dashboard | ARMS {% endblock title %}
+
+{% block js %} 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js" integrity="sha256-oSgtFCCmHWRPQ/JmR4OoZ3Xke1Pw4v50uh6pLcu+fIc=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+        var endpoint = 'api/data/'
+        var default_level_average = []
+        var labels = []
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                labels = data.labels
+                default_level_average = data.default_level_average
+                setAverageGraph()
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            },
+        })
+        function setAverageGraph(){
+        var ctx = document.getElementById("students_avg_bar").getContext('2d');
+        var ctx2 = document.getElementById("students_avg_doughnut").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# Basé sur les performances des élèves (moyenne)',
+                    data: default_level_average,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            var myChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# Basé sur les performances des élèves (moyenne)',
+                    data: default_level_average,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+</script>
+{% endblock js %}
+{% block content %}
+ <div class="container-fluid mt-5">
+
+            <!-- Heading -->
+            <div class="card mb-4 wow fadeIn">
+
+                <!--Card content-->
+                <div class="card-body d-sm-flex justify-content-between">
+
+                    <h6 class="mb-2 mb-sm-0 pt-1">
+                        <a href="/">Page d'acceuil</a>
+                    </h6>
+                </div>
+
+            </div>
+            <!-- Heading -->
+
+ 
+
+            <!--Grid row-->
+            <div class="row wow fadeIn">
+
+                <!--Grid column-->
+                <div class="col-lg-4 col-md-12 mb-4">
+
+                    <!--Card-->
+                    
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'student_list' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div class="card-header waves-effect">Etudiant{{ no_of_students|pluralize }}</div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_students|apnumber }} registered student{{ no_of_students|pluralize }}" class="card-body waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_students|apnumber }} ({{ no_of_students}})</span>
+
+                        </div>
+                        </a>
+
+                    </div>
+                    
+                    <!--/.Card-->
+
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+
+                    <!--Card-->
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'staff_list' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div class="card-header waves-effect">Personnel{{ no_of_staff|pluralize }}</div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_staff|apnumber }} registered staff" class="card-body  waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_staff|apnumber }} ({{ no_of_staff}})</span>
+
+                        </div>
+                        </a>
+                    </div>
+                    <!--/.Card-->
+
+                </div>
+                
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-4 col-md-6 mb-4">
+
+                    <!--Card-->
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'course_list' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div  class="card-header waves-effect">
+                        Cours{{ no_of_courses|pluralize }}
+                        </div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_courses|apnumber }} registered course{{ no_of_courses|pluralize }}" class="card-body waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_courses|apnumber }} ({{ no_of_courses }})</span>
+                        </div>
+                        </a>
+                    </div>
+                    <!--/.Card-->
+                </div>
+                <div class="col-lg-5 col-md-10 mb-10">
+                    <canvas id="students_avg_bar" width="400" height="220"></canvas>
+                </div>
+                <div class="col-lg-7 col-md-10 mb-10">
+                    <canvas id="students_avg_doughnut" width="400" height="150"></canvas>
+                </div>
+            </div>
+            <hr />
+            <div class="row wow fadeIn">
+            <div class="col-lg-4 col-md-12 mb-4">
+
+                    <!--Card-->
+                    
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'repeat_list' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div class="card-header waves-effect">Étudiant qui redouble{{ no_of_students_to_repeat|pluralize }}</div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_students_to_repeat|apnumber }} student{{ no_of_students_to_repeat|pluralize }} to repeat a level" class="card-body waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_students_to_repeat|apnumber }} ({{ no_of_students_to_repeat }})</span>
+
+                        </div>
+                        </a>
+
+                    </div>
+                    
+                    <!--/.Card-->
+
+                </div>
+                <div class="col-lg-4 col-md-12 mb-4">
+
+                    <!--Card-->
+                    
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'carry_over' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div class="card-header waves-effect">Reportez l'étudiant{{ no_of_carry_over_students|pluralize }}</div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_carry_over_students|apnumber }} carry over student{{ no_of_carry_over_students|pluralize }}" class="card-body waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_carry_over_students|apnumber }} ({{ no_of_carry_over_students }})</span>
+
+                        </div>
+                        </a>
+
+                    </div>
+                    
+                    <!--/.Card-->
+
+                </div>
+                <div class="col-lg-4 col-md-12 mb-4">
+
+                    <!--Card-->
+                    
+                    <div class="card">
+                        <a href="{% if not request.user.is_student %}{% url 'first_class_list' %}{% else %} # {% endif %}">
+                        <!-- Card header -->
+                        <div class="card-header waves-effect">Premier Etudiant de la Classe{{ no_of_1st_class_students|pluralize }}</div>
+
+                        <!--Card content-->
+                        <div data-toggle="tooltip" title="{{ no_of_1st_class_students|apnumber }} first class student{{ no_of_1st_class_students|pluralize }}" class="card-body waves-effect">
+
+                            <span class="badge badge-info">{{ no_of_1st_class_students|apnumber }} ({{ no_of_1st_class_students }})</span>
+
+                        </div>
+                        </a>
+
+                    </div>
+                    
+                    <!--/.Card-->
+
+                </div>
+            </div>
+{% endblock %} }

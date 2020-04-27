@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %} Resultats | EPITA {% endblock title %}
+
+{% block side_bar %}
+    {% include 'partial_active_element.html' with active='view_results' %}
+{% endblock side_bar %}
+
+{% block content %}
+	<div class="container-fluid mt-5">
+          {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+<style type="text/css">
+  .table-wrapper-scroll-y {
+display: block;
+max-height: 350px;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+</style>
+<center>{{ student.level }}L Resultat</center>
+<div class="table-wrapper-scroll-y">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Titre de cours</th>
+        <th scope="col">Code de cours</th>
+        <th scope="col">CC</th>
+        <th scope="col">Examen</th>
+        <th scope="col">Moyenne</th>
+        <th scope="col">Appreciation</th>
+
+      </tr>
+    </thead>
+    <u>Premier Semestre:</u>
+    {% for course in courses %}
+    {% if course.course.semester == "First" %}
+    <tbody>
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ course.course.courseTitle }}</td>
+        <td>{{ course.course.courseCode }}</td>
+        <td>{{ course.ca }}</td>
+        <td>{{ course.exam }}</td>
+        <td>{{ course.total }}</td>
+        <td>{{ course.grade }}</td>
+      </tr>
+    </tbody>
+    {% endif %}
+    {% endfor %}
+    <br>
+  </table>
+    <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Titre de cours</th>
+        <th scope="col">Code de cours</th>
+        <th scope="col">Appreciation</th>
+      </tr>
+    </thead>
+    <u>Seccond Semestre:</u>
+    {% for course in courses %}
+    {% if course.course.semester == "Second" %}
+    <tbody>
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ course.course.courseTitle }}</td>
+        <td>{{ course.course.courseCode }}</td>
+        <td>{{ course.grade }}</td>
+      </tr>
+    </tbody>
+    {% endif %}
+    {% endfor %}
+  </table>
+</div>
+<br>
+<tbody>
+  {% for result in result %}
+  {% if result.semester == "First" %}
+  <tr>
+    <th scope="row"></th>
+    <th></th>
+    <th><label>Premier Semestre Moyenne:</label> {{ result.gpa }}</th>
+  </tr>
+  <br>
+  {% elif result.semester == "Second" %}
+    <tr>
+    <th scope="row"></th>
+    <th></th>
+    <th><label>Second Semestre Moyenne:</label> {{ result.gpa }}</th>
+  </tr>
+  <br>
+  {% endif %}
+  {% endfor %}
+  <tr>
+    <th scope="row"></th>
+    <th></th>
+    <th><label>Precedente Moyenne:</label> {{ previousCGPA }}</th>
+  </tr>
+</tbody>
+</div>
+<br>
+{% endblock %}

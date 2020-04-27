@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ user.first_name|capfirst }}'s Profile | ARMS {% endblock title %}
+
+{% block side_bar %}
+    {% include 'partial_active_element.html' with active='Profile' %}
+{% endblock side_bar %}
+
+{% block content %}
+<style type="text/css">
+  .table-wrapper-scroll-y {
+display: block;
+max-height: 350px;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+</style>
+ <div class="container-fluid mt-5">
+<!-- Heading -->
+<div class="card mb-4 wow fadeIn">
+	<!--Card content-->
+    <div class="card-body d-sm-flex justify-content-between">
+	    <h6 class="mb-2 mb-sm-0 pt-1">
+    	<a href="/">Page d'accueil</a>
+        	<span>/</span>
+            	<span>Profile</span>
+        </h6>
+    </div>
+</div>
+            <!-- Heading -->
+
+  <div class="row">
+    <div class="col-md-3">
+
+    	<!-- Card -->
+<div class="card">
+
+  <!-- Card image -->
+  <div class="view overlay">
+    <img class="card-img-top" src="{{ user.get_picture }}" alt="{{ user.get_fullname }}'s Picture">
+    <a class="mask" href="#">
+      <div class="mask white-text">{{ user.get_full_name|capfirst }}</div>
+    </a>
+  </div>
+
+{% if user.is_lecturer %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small class="card-title"><b>Nom: </b>{{ user.get_full_name }}</small><br>
+    <small class="card-title">Role: Maître de conférences </small><br>
+    <a href="#" class="btn btn-primary">Envoyer le message</a>
+  </div>
+{% endif %}
+
+{% if user.is_student %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small class="card-title">Nom: {{ user.first_name }}</small><br>
+    <small class="card-title">Role: Etudiant</small><br>
+    <small class="card-title">Niveau: {{ level.level }}</small>
+    <a href="#" class="btn btn-primary">Envoyer le message</a>
+  </div>
+{% endif %}
+
+
+{% if user.is_superuser %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small>Nom: {{ user.get_full_name }}</small><br>
+    <small>Role: Superutilisateur</small>
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary">Editer Profile</a>
+  </div>
+{% endif %}
+
+
+</div>
+<!-- Card -->
+    </div>
+    {% if user.is_lecturer %}
+    <div class="col-md-7 text-center">
+      <p>Cours assignés</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Code de cours</th>
+      <th scope="col">Titre de cours</th>
+      <th scope="col">Unité de cours</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ course.courseCode }}</td>
+      <td>{{ course }}</td>
+      <td>{{ course.courseUnit }}</td>
+      <td>
+	  	  <span class="table-remove"><a href="{% url 'withheld_course' pk=course.pk %}" class="btn btn-warning btn-rounded btn-sm my-0">Supprimer</a></span>
+	    </td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td>{{ course.courseCode }}</td>
+      <td></td>
+      <td>Aucun cours n'est attribué à ce personnel au cours du semestre en cours!</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+{% if user.is_student %}
+    <div class="col-md-7 text-center">
+      <p>Cours enregistrés</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Code du cours</th>
+      <th scope="col">Titre du cours</th>
+      <th scope="col">Unité de cours</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ course.course.courseCode }}</td>
+      <td>{{ course.course.courseTitle }}</td>
+      <td>{{ course.course.courseUnit }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td>{{ course.courseCode }}</td>
+      <td></td>
+      <td>Aucun cours n'est inscrit cette session!</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+  {% if user.is_superuser %}
+    <div class="col-md-7 text-center">
+      <p>Liste de tout le personnel</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Prénom</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Addresse</th>
+      <th scope="col">Image</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for staff in staff %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ staff.first_name }}</td>
+      <td>{{ staff.last_name }}</td>
+      <td>{{ staff.address }}</td>
+      <td>{{ staff.get_picture.url }}</td>
+      <td>
+        <span class="table-remove">
+          <a href="" class="btn btn-info btn-rounded btn-sm my-0">Vue</a>
+        </span>
+
+        <span class="table-remove">
+          <a href="" class="btn btn-info btn-rounded btn-sm my-0">Supprimer</a>
+        </span>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td></td>
+      <td></td>
+      <td>Pas de personnel à montrer!</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+  <div class="col-md-2 text-center">
+    <small> Inscrit:<br><date>{{ user.date_joined|naturaltime }}</date></small><hr />
+    <small> Dernière connexion:<br><date>
+    {% if user.last_login == None %} 
+          Never 
+    {% else %}
+      {{ user.last_login|naturaltime }}
+    {% endif %}</date></small><hr />
+    <small> Telephone:<br><date>{% if user.phone %}{{ user.phone }}{% endif %}</date></small><hr />
+    <small> Email:<br><date>{{ user.email }}</date></small><hr />
+    <small> Addresse:<br><date>{{ user.address }}</date></small>
+  </div>
+</div>
+{% endblock %}

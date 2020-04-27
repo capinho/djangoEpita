@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %} Report des étudiants | EPITA{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid mt-5">
+          {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+    <!-- Heading -->
+    <div class="card mb-4 wow fadeIn">
+    <!--Card content-->
+    <div class="card-body d-sm-flex justify-content-between">
+        <h6 class="mb-2 mb-sm-0 pt-1">
+            <a href="/">Page d'accueil</a>
+            <span>/</span>
+            <span>Répéteurs</span>
+        </h6>
+    </div>
+
+    </div>
+
+    <div class="card">
+    	    <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Reportez les étudiants</strong>
+        </h5>
+
+        <div class="card-body px-lg-5 pt-0">
+            <br>
+        	<form method="POST" action="{% url 'carry_over' %}">{% csrf_token %}
+        	<label>Sélectionnez un cours</label>
+        	
+        	<select class="btn-default" name="course">
+                <option>-----</option>
+        		{% for course in all_courses %} 
+        			<option value="{{ course.courseCode }}">{{ course.courseCode }} </option>
+        		{% endfor %}
+        	</select>
+        	
+        	<label>Sélectionnez une session</label>
+        	<select class="btn-default" name="session">
+                <option>------</option>
+        	{% for session in sessions %} 
+        		<option value="{{ session.session }}">{{ session.session }} </option>
+        	{% endfor %}
+        	</select>
+        	<button class="btn bnt-primary blue-text pull-right" type="submit">Obtenir la liste</button>
+        </form>
+    </div>
+    </div>
+{% if signal_template %}
+    {% if request.user.is_superuser %}
+    <!-- Heading -->
+    <h6 class="mb-2 mb-sm-0 pt-1">
+        <a class="pull-right btn btn-default btn-rounded mb-3" href="" class="btn btn-default btn-rounded mb-4">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Impression
+        </a>
+    </h6>
+    {% endif %}
+    <div class="table-wrapper-scroll-y">
+    	<table class="table table-bordered table-striped">
+    		<thead>
+    			<tr>
+    				<th scope="col">#</th>
+                    <th scope="col">Etudiant</th>
+                    <th scope="col">Cours</th>
+                    {% if request.user.is_superuser %}
+                    <th scope="col">Action</th>
+                    {% endif %}
+                    </tr>
+                    </thead>
+                    {% for course in courses %}
+                    <tbody>
+                        <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ course.student }}</td>
+                        <td>{{ course.course }}</td>
+                    	{% if request.user.is_superuser %}
+                        <td>
+                        	<a data-toggle="tooltip" title="delete" href="" class="red-text"><i class="fa fa-times"></i></a>
+                        </td>
+                    	{% endif %}
+                    	</tr>
+                    {% empty %}
+                        <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                      	  <span>Pas de report d'étudiant</span>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                        </tbody>
+                    {% endfor %}
+                     </table>
+                 </div>
+             </div>
+ {% endif %}
+{% endblock %}
