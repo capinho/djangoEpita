@@ -1,6 +1,11 @@
 # EPITA gestion etudiants 
 
 Voir demo du projet ici: http://epitagestetud.herokuapp.com/
+les identifiants tests crees sont:
+**identifiant admin**: ```root```
+**identifiant professeur**: ```gaye```
+**identifiant etudiant**: ```ian```
+**Tous les mots de passes sont:**: ```qwertyuiop0```
 
 **Projet Epita Dakar du cours de python**
 
