@@ -665,7 +665,7 @@ def view_result(request):
     previousCGPA = 0
     previousLEVEL = 0
 
-    for i in result:
+    '''for i in result:
         if not int(i.level) - 20 == 0: 
             previousLEVEL = i.level
             try:
@@ -675,12 +675,12 @@ def view_result(request):
             except:
                 previousCGPA = 0
         else:
-            break
+            break'''
     context = {
             "courses": courses, 
             "result":result, 
             "student": student, 
-            "previousCGPA": previousCGPA,
+           # "previousCGPA": previousCGPA,
             }
 
     return render(request, 'students/view_results.html', context)

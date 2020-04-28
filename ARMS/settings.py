@@ -14,6 +14,7 @@ import os
 import django_heroku
 import dj_database_url
 from decouple import config
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,9 +26,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!!fum%*$(y_w$-j-sjl=wd&qy+_%phky6rueji4xqye8)3#^&k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','*']
 
 
 # Application definition
@@ -82,11 +83,17 @@ WSGI_APPLICATION = 'ARMS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+'''
+DATABASES = {
+    "default": dj_database_url.config(
+        default="postgres://postgres:arms@localhost:5432/arms", conn_max_age=600
+    )
 }
 
 
