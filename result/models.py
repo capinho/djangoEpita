@@ -120,7 +120,7 @@ class TakenCourse(models.Model):
     ca = models.PositiveIntegerField(blank=True, null=True, default=0)
     exam = models.PositiveIntegerField(blank=True, null=True, default=0)
     total = models.PositiveIntegerField(blank=True, null=True, default=0)
-    grade = models.CharField(choices=GRADE, max_length=1, blank=True)
+    grade = models.CharField(choices=GRADE, max_length=16, blank=True)
     comment = models.CharField(choices=COMMENT, max_length=200, blank=True)
 
     def get_absolute_url(self):
