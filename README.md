@@ -1,4 +1,6 @@
-# EPITA gestion etudiants
+# EPITA gestion etudiants 
+
+Voir demo du projet ici: http://epitagestetud.herokuapp.com/
 
 **Projet Epita Dakar du cours de python**
 
